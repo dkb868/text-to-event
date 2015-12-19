@@ -1,0 +1,19 @@
+{
+  "name": "text-to-event",
+  "version": "1.0.0",
+  "description": "Converts natural language to event objects to easily add things to a calendar.",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "nlp",
+    "natural",
+    "language",
+    "processing",
+    "events",
+    "parsing"
+  ],
+  "author": "Dmitri Brereton",
+  "license": "ISC"
+}
