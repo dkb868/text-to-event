@@ -37,3 +37,6 @@ node_modules
 test.js
 
 new.js
+
+# ignore idea
+.idea
