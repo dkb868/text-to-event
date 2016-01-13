@@ -38,6 +38,6 @@ module.exports = {
 
         console.log("date words: " + dateWords +"\n");
         console.log("time words: " + timeWords + "\n");
-        console.log("locatio nwords: " + locationWords + "\n");
+        console.log("location words: " + locationWords + "\n");
     }
 };
