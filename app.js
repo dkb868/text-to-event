@@ -8,18 +8,33 @@ module.exports = {
         var event = {
             date: 0,
             time: 0,
-            location: '',
+            location: ''
         };
         var dateWords = [];
         var timeWords = [];
         var locationWords = [];
+        var dateKeys = ['Sunday','Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+        //days of the week indexed like javascript 0-6 with Sunday=0
         str = str.split(' ');
         // search for keywords
         for(var i=0;i<str.length;i++){
-            if(str[i] == 'on'){
-                dateWords.push(str[i+1]);
-            } else if (str[i] == 'in'){
+            //It's better to just include explicit searches for dates since the word indicators are countable
+            //finite and there are unforeseen opportunities to miss them e.x. Tomorrow, we meet ...
+            // This Thursday ....on the 4th of November
+            //There are only 7 days of the week and today/tomorrow
+            dateKeys.forEach(function(Kword){
+                if(Kword == str[i]) {
+                    dateWords.push(str[i]);
+                }
+            });
+            /*TODO: Implement today and tomorrow
+            if(str[i] == 'Tomorrow')
+                dateWords.push(str[i])
+                str[i] == 'Today')
+                 */
+            if (str[i] == 'in'){
                 locationWords.push(str[i+1]);
+                //ToDo: check for room number of building or two word locations(Rieber Hall)
             }
             else if (str[i] == 'at') {
                 // because at can be a location or a time, check to see if there's a number next
@@ -36,8 +51,29 @@ module.exports = {
             }
         }
 
+        //dateWords analysis
+        var date = new Date();
+        var currentDay = date.getDay();//get number from 0(Sunday) to 6(Sat)
+        var daysFromNow;
+        dateWords.forEach(function(Lword)//for each list word, translate into days from now
+        {
+            dateKeys.forEach(function(Kword, eventDay){//finds event day in numbers 0-6
+                if(Kword == Lword)
+                {
+                    daysFromNow = eventDay - currentDay;
+                    if(daysFromNow<0)
+                        daysFromNow +=7; //if negative then its next week
+                }
+            });
+        });
+        console.log("Days from Now: " + daysFromNow +"\n");
+        //TODO: "This Monday," or "on Wednesday." need to register
         console.log("date words: " + dateWords +"\n");
         console.log("time words: " + timeWords + "\n");
         console.log("location words: " + locationWords + "\n");
     }
 };
+
+
+
+
