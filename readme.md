@@ -1,2 +1,13 @@
 # text-to-event
-Converts natural language to event objects to easily add messages or posts to a calendar.
+Parses natural language to create events.
+
+Example:
+
+createEvent("meeting tonight at 8pm at the park")
+
+{
+  "title": "meeting"
+  "date": today,
+  "time": 8:00PM,
+  "location" : "park"
+}
