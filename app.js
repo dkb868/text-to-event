@@ -3,35 +3,33 @@ module.exports = {
         return "TODO: Everything";
     },
 
+
     // splits string up by keywords into location,date,time
-    separateByKeyword: function(str) {
-        var event = {
-            date: 0,
-            time: 0,
-            location: ''
-        };
+    getEvent: function(str, postDate) {
         var dateWords = [];
-        var timeWords = [];
-        var locationWords = [];
-        var dateKeys = ['Sunday','Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+        //var timeWords = [];
+        //var locationWords = [];
+        var dateKeys = ['Sunday','Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Today', 'Tomorrow'];
         //days of the week indexed like javascript 0-6 with Sunday=0
+        function wordInString(s, word){
+            return new RegExp( '\\b' + word + '\\b', 'i').test(s);
+        }
+        function addDays(date, days) {
+            var result = new Date(date);
+            result.setDate(result.getDate() + days);
+            return result;
+        }
         str = str.split(' ');
         // search for keywords
-        for(var i=0;i<str.length;i++){
-            //It's better to just include explicit searches for dates since the word indicators are countable
-            //finite and there are unforeseen opportunities to miss them e.x. Tomorrow, we meet ...
-            // This Thursday ....on the 4th of November
-            //There are only 7 days of the week and today/tomorrow
-            dateKeys.forEach(function(Kword){
-                if(Kword == str[i]) {
-                    dateWords.push(str[i]);
-                }
-            });
-            /*TODO: Implement today and tomorrow
-            if(str[i] == 'Tomorrow')
-                dateWords.push(str[i])
-                str[i] == 'Today')
-                 */
+        dateKeys.forEach(function(kWord) {
+            if (wordInString(str, kWord))
+                dateWords.push(kWord);
+        });
+        //It's better to just include explicit searches for dates since the word indicators are countable
+        //finite and there are unforeseen opportunities to miss them e.x. Tomorrow, we meet ...
+        // This Thursday ....on the 4th of November
+        //There are only 7 days of the week and today/tomorrow
+        /*for(var i=0;i<str.length;i++){
             if (str[i] == 'in'){
                 locationWords.push(str[i+1]);
                 //ToDo: check for room number of building or two word locations(Rieber Hall)
@@ -50,13 +48,16 @@ module.exports = {
                 }
             }
         }
-
+*/
         //dateWords analysis
-        var date = new Date();
-        var currentDay = date.getDay();//get number from 0(Sunday) to 6(Sat)
+        var currentDay = postDate.getDay();//get number from 0(Sunday) to 6(Sat)
         var daysFromNow;
         dateWords.forEach(function(Lword)//for each list word, translate into days from now
         {
+            if(Lword == 'Today')
+                daysFromNow = 0;
+            else if(Lword == 'Tomorrow')
+                daysFromNow = 1;
             dateKeys.forEach(function(Kword, eventDay){//finds event day in numbers 0-6
                 if(Kword == Lword)
                 {
@@ -66,11 +67,22 @@ module.exports = {
                 }
             });
         });
-        console.log("Days from Now: " + daysFromNow +"\n");
-        //TODO: "This Monday," or "on Wednesday." need to register
-        console.log("date words: " + dateWords +"\n");
-        console.log("time words: " + timeWords + "\n");
-        console.log("location words: " + locationWords + "\n");
+        if(daysFromNow != undefined)
+        {
+            var eventDate = addDays(postDate, daysFromNow);
+            /*console.log("Days from Now: " + daysFromNow +"\n");
+            //TODO: "This Monday," or "on Wednesday." need to register
+            console.log("Date Words: " + dateWords +"\n");
+            console.log("time words: " + timeWords + "\n");
+             console.log("location words: " + locationWords + "\n");*/
+        }
+
+        return{
+            "title": "Event",
+            "date": eventDate,
+            "time": undefined,
+            "location": undefined
+        };
     }
 };
 
